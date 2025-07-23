@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тайны многоквартирного дома</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+        }
+        h1 {
+            color: #5d5d5d;
+            margin-bottom: 25px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin-bottom: 25px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #mysteryOutput {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #666;
+            min-height: 100px; /* Чтобы избежать "прыжков" при коротком тексте */
+            line-height: 1.6;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #d9534f; /* Красный цвет для выделения */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Тайны нашего дома</h1>
+        <button id="generateMystery">Узнать, что происходит сегодня!</button>
+        <div id="mysteryOutput">Нажмите кнопку, чтобы узнать о странных событиях в доме...</div>
+    </div>
+
+    <script>
+        const mysteries = [
+            // Межквартирный коридор и общие зоны
+            "После 00:00 в межквартирном коридоре свет горит в <span class='highlight'>красном цвете</span>, и лампочки не меняются.",
+            "Жильцы жалуются, что <span class='highlight'>лифт иногда останавливается между этажами</span>, но когда двери открываются, внутри никого нет.",
+            "На лестничной клетке на <span class='highlight'>[Этаж]</span> этаже постоянно слышен тихий <span class='highlight'>плач ребенка</span>, но никто из соседей не признается, что у них есть малыш.",
+            "В подъезде стало необъяснимо <span class='highlight'>холодно</span>, даже летом, и термостат не помогает.",
+            "На чердаке слышны <span class='highlight'>царапающие звуки</span>, хотя там не должно быть животных.",
+            "Каждое утро <span class='highlight'>дверь в общий подвал оказывается открытой</span>, хотя консьерж её запирает.",
+            "Кто-то постоянно <span class='highlight'>передвигает цветочные горшки</span> на окнах лестничных пролетов.",
+
+            // Квартиры
+            "Соседи с <span class='highlight'>[Этаж_1]</span> по <span class='highlight'>[Этаж_2]</span> этаж жалуются, что плита на кухне ночью включается сама по себе.",
+            "У жильцов квартиры на <span class='highlight'>[Этаж]</span> этаже по ночам <span class='highlight'>сами по себе перемещаются мелкие предметы</span> с полок.",
+            "На <span class='highlight'>[Этаж]</span> этаже, в одной из квартир, каждую ночь ровно в 03:00 раздаются <span class='highlight'>звуки работающего пылесоса</span>.",
+            "В ванной комнате квартиры на <span class='highlight'>[Этаж]</span> этаже вода из крана течет <span class='highlight'>необычно густая и имеет странный запах</span>, но анализы в норме.",
+            "В спальне квартиры на <span class='highlight'>[Этаж]</span> этаже жильцы жалуются на <span class='highlight'>чувство постоянного чьего-то присутствия</span>, даже когда они одни.",
+            "На кухне квартиры на <span class='highlight'>[Этаж]</span> этаже <span class='highlight'>продукты в холодильнике портятся необъяснимо быстро</span>, несмотря на срок годности.",
+            "Окна квартиры на <span class='highlight'>[Этаж]</span> этаже часто бывают <span class='highlight'>запотевшими изнутри</span>, даже в жаркую погоду.",
+            "В гостиной квартиры на <span class='highlight'>[Этаж]</span> этаже <span class='highlight'>телевизор включается сам по себе</span> на незнакомых каналах.",
+            "В детской комнате на <span class='highlight'>[Этаж]</span> этаже игрушки <span class='highlight'>меняют свое местоположение</span> ночью.",
+            "В квартире на <span class='highlight'>[Этаж]</span> этаже из вентиляции доносится <span class='highlight'>шепот</span>, который невозможно разобрать.",
+            "По ночам в квартирах на <span class='highlight'>[Этаж]</span> этаже слышны <span class='highlight'>шаги по потолку</span>, хотя сверху никто не живет или квартира пустует.",
+            "В квартире на <span class='highlight'>[Этаж]</span> этаже <span class='highlight'>домашние животные стали вести себя странно</span>: смотрят в пустоту, рычат без причины.",
+            "Из шкафа в прихожей квартиры на <span class='highlight'>[Этаж]</span> этаже иногда доносятся <span class='highlight'>звуки старой граммофонной пластинки</span>, хотя там нет проигрывателя.",
+            "В квартире на <span class='highlight'>[Этаж]</span> этаже жильцы обнаруживают, что <span class='highlight'>их ключи от квартиры постоянно меняют место</span>, хотя их никто не трогает."
+        ];
+
+        const generateBtn = document.getElementById('generateMystery');
+        const mysteryOutput = document.getElementById('mysteryOutput');
+
+        generateBtn.addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * mysteries.length);
+            let mystery = mysteries[randomIndex];
+
+            // Заменяем плейсхолдеры для этажей
+            if (mystery.includes('[Этаж]')) {
+                const floor = Math.floor(Math.random() * 10) + 1; // От 1 до 10 этажей
+                mystery = mystery.replace('[Этаж]', floor);
+            }
+            if (mystery.includes('[Этаж_1]') && mystery.includes('[Этаж_2]')) {
+                let floor1 = Math.floor(Math.random() * 10) + 1;
+                let floor2 = Math.floor(Math.random() * 10) + 1;
+                // Убедимся, что Этаж_2 больше Этажа_1 или они разные
+                while (floor2 <= floor1) {
+                    floor2 = Math.floor(Math.random() * 10) + 1;
+                }
+                mystery = mystery.replace('[Этаж_1]', floor1);
+                mystery = mystery.replace('[Этаж_2]', floor2);
+            }
+
+            mysteryOutput.innerHTML = mystery;
+        });
+    </script>
+</body>
+</html>
